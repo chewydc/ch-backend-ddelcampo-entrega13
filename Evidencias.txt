@@ -1,0 +1,198 @@
+---------------------------------
+Ejecutando en modo cluster
+---------------------------------
+> node ./src/server.js -p 8089 -m CLUSTER
+
+> tasklist /fi "imagename eq node.exe" 
+
+Nombre de imagen               PID Nombre de sesión Núm. de ses Uso de memor
+========================= ======== ================ =========== ============
+node.exe                      9984 Console                    1    59.364 KB
+node.exe                      9124 Console                    1    58.832 KB
+node.exe                     10976 Console                    1    58.904 KB
+node.exe                     20068 Console                    1    57.908 KB
+node.exe                     10008 Console                    1    58.984 KB
+node.exe                     13796 Console                    1    59.260 KB
+node.exe                     21672 Console                    1    58.772 KB
+node.exe                     22400 Console                    1    59.376 KB
+node.exe                      6304 Console                    1    65.256 KB
+
+
+Verifico 9 procesos en modo cluster, 8 Workers y 1 Master
+
+---------------------------------
+Ejecutando Nodemon
+---------------------------------
+
+> nodemon ./src/server.js -p 8089 -m CLUSTER
+[nodemon] 2.0.12
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./src/server.js -p 8089 -m CLUSTER`
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Número de procesadores: 8
+PID MASTER 2644
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 2564
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 1664
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 3256
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 17536
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 17004
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 14744
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 5764
+{ puerto: 8089, modo: 'CLUSTER', otros: [] }
+Servidor HTTP escuchando en el puerto 8089 - PID WORKER 23416
+
+> tasklist /fi "imagename eq node.exe" 
+
+Nombre de imagen               PID Nombre de sesión Núm. de ses Uso de memor
+========================= ======== ================ =========== ============
+node.exe                      1912 Console                    1    27.644 KB
+node.exe                      2644 Console                    1    59.460 KB
+node.exe                     17536 Console                    1    58.176 KB
+node.exe                      3256 Console                    1    58.196 KB
+node.exe                      2564 Console                    1    58.072 KB
+node.exe                      1664 Console                    1    58.700 KB
+node.exe                     17004 Console                    1    57.968 KB
+node.exe                     14744 Console                    1    57.656 KB
+node.exe                      5764 Console                    1    58.628 KB
+node.exe                     23416 Console                    1    58.972 KB
+
+Verifico 10 procesos en modo cluster, 8 Workers, 1 Master (PID 2644) y 1 para nodemon (PID 1912)
+
+---------------------------------
+Ejecutando PM2
+---------------------------------
+
+> pm2 start ./src/server.js --name="Server" --watch -i 4        
+[PM2] Spawning PM2 daemon with pm2_home=C:\Users\ddelcampo\.pm2
+[PM2] PM2 Successfully daemonized
+[PM2] Starting C:\Users\ddelcampo\source\Curso Backend CoderHouse\Entrega13_delCampoDamian\src\server.js in cluster_mode (4 instances)
+[PM2] Done.
+┌─────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id  │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├─────┼───────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0   │ Server    │ default     │ 1.0.0   │ cluster │ 18820    │ 5s     │ 0    │ online    │ 64.1%    │ 32.1mb   │ u603924  │ enabled  │
+│ 1   │ Server    │ default     │ 1.0.0   │ cluster │ 7496     │ 4s     │ 0    │ online    │ 56.2%    │ 31.8mb   │ u603924  │ enabled  │
+│ 2   │ Server    │ default     │ 1.0.0   │ cluster │ 17072    │ 4s     │ 0    │ online    │ 62.5%    │ 31.2mb   │ u603924  │ enabled  │
+│ 3   │ Server    │ default     │ 1.0.0   │ cluster │ 12404    │ 3s     │ 0    │ online    │ 75%      │ 30.9mb   │ u603924  │ enabled  │
+└─────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] Current process list is not synchronized with saved list. Type 'pm2 save' to synchronize.
+
+
+> tasklist /fi "imagename eq node.exe"
+
+Nombre de imagen               PID Nombre de sesión Núm. de ses Uso de memor
+========================= ======== ================ =========== ============
+node.exe                      4512 Console                    1    33.168 KB
+node.exe                     21476 Console                    1    56.680 KB
+node.exe                     16196 Console                    1    56.412 KB
+node.exe                     19692 Console                    1    50.032 KB
+node.exe                     14444 Console                    1    47.748 KB
+
+> pm2 stop ./src/server.js --name="Server" --watch -i 4  
+[PM2] Applying action stopProcessId on app [./src/server.js](ids: [ 0, 1, 2, 3 ])
+[PM2] [Server](1) ✓
+[PM2] [Server](2) ✓
+[PM2] [Server](3) ✓
+
+┌─────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id  │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├─────┼───────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0   │ Server    │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ u603924  │ disabled │
+│ 1   │ Server    │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ u603924  │ disabled │
+│ 2   │ Server    │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ u603924  │ disabled │
+│ 3   │ Server    │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ u603924  │ disabled │
+└─────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+---------------------------------
+Balanceo de Cargas con NGINX #1
+---------------------------------
+
+Script
+>npm start (levanta un server en modo fork en puerto 8080)
+>node ./src/server.js -p 8081 -m CLUSTER (levanta 8 server en modo cluster en puerto 8081 gestionado por Node)
+
+Config NGINX
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    upstream node_app {
+        server 127.0.0.1:8080;
+    }
+
+    upstream node_randoms {
+        server 127.0.0.1:8081;
+    }
+
+    server {
+        listen       80;
+        server_name  nginx_node;
+        root         ../nodeServer/public;
+
+        location /api/randoms {
+            proxy_pass http://node_randoms;
+        }
+        
+        location / {
+            proxy_pass http://node_app;
+        }
+        
+    }
+}
+
+
+---------------------------------
+Balanceo de Cargas con NGINX #2
+---------------------------------
+
+Script
+>npm start (levanta un server en modo fork en puerto 8080)
+>node ./src/server.js -p 8082 (levanta un server en modo fork en puerto 8082)
+>node ./src/server.js -p 8083 (levanta un server en modo fork en puerto 8083)
+>node ./src/server.js -p 8084 (levanta un server en modo fork en puerto 8084)
+>node ./src/server.js -p 8085 (levanta un server en modo fork en puerto 8085)
+
+Config NGINX
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+
+    upstream node_app {
+        server 127.0.0.1:8080;
+    }
+
+    upstream node_randoms {
+        server 127.0.0.1:8082;
+        server 127.0.0.1:8083;
+        server 127.0.0.1:8084;
+        server 127.0.0.1:8085;
+    }
+
+    server {
+        listen       80;
+        server_name  nginx_node;
+        root         ../nodeServer/public;
+
+        location /api/randoms {
+            proxy_pass http://node_randoms;
+        }
+        
+        location / {
+            proxy_pass http://node_app;
+        }
+        
+    }
+}
+ 
